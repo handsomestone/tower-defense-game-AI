@@ -1,0 +1,228 @@
+for(int c=0;c<decisions.size();c++)
+		{
+		
+			Integer cannon = decisions.get(c);
+			System.out.print(cannon.intValue());
+			System.out.print(' ');
+			if(cannon.intValue()<5)
+			{
+				continue;
+			}
+			Tile tile = emptyTile.get(new Integer(c));
+			int towerType =Util.decodeType(cannon.intValue());
+			int towerStrength = Util.decodeStrength(cannon.intValue());
+			CannonTower cannonTower = new CannonTower(towerType,towerStrength,tile);
+			System.out.println("has Cannon !!!!");
+			System.out.println("has Cannon money !!!!"+cannonTower.getTowerCost());
+			if(map[tile.getRow()][tile.getCol()].getIsTower()==true)
+			{
+				
+				if(map[tile.getRow()][tile.getCol()].getTowerType()==cannonTower.getTowerType())
+				{
+					if(map[tile.getRow()][tile.getCol()].getTowerStrength()< cannonTower.getTowerStrength())
+					{
+						cost+= cannonTower.getStrengthenCost(map[tile.getRow()][tile.getCol()].getTowerStrength(),cannonTower.getTowerStrength());
+					}
+				}
+				else
+				{
+					cost+=cannonTower.getTowerCost();
+				}
+				
+			}
+			else
+			{/*
+				int towerType =Util.decodeType(cannon.intValue());
+				int towerStrength = Util.decodeStrength(cannon.intValue());
+				CannonTower cannonTower = new CannonTower(towerType,towerStrength,tile);*/
+				cost+=cannonTower.getTowerCost();
+			}
+			boolean start =false;
+			int leaveNode = 0;
+			int arriveNode =0;
+			int leaveGvalue = 0;
+			int arriveGvalue = 0;
+			for(int sE=0;sE<sEnemy.size();sE++)
+			{
+				List<Node> bestPath = path.get(new Integer(sE));
+				//List<Node> bestPath =  getBestPath(sEnemy.get(sE),tileToCannon);
+				/*PriorityQueue<Node> path = new PriorityQueue<Node>(1000000,cmp );
+				for(Node iter:bestPath)
+				{
+					path.add(iter)
+				}*/
+				if(cannonTower.checkIsInRange(bestPath)==false)
+				{
+					continue;
+				}
+				 start =false;
+				 leaveNode = 0;
+				 arriveNode =0;
+				 leaveGvalue = 0;
+				 arriveGvalue = 0;
+				for(int bPath=0;bPath<bestPath.size();bPath++)
+				{
+					Node rangeNode = bestPath.get(bPath);
+					if(cannonTower.checkIsInRange(rangeNode))
+					{
+						if(start==false)
+						{
+							leaveNode = bPath;
+							arriveNode= bPath;
+							start = true;
+						}
+						else if(start==true)
+						{
+							arriveNode = bPath;
+							continue;
+						}
+					}
+					else
+					{
+						if(start == true)
+						{		
+							start = false;
+							if(leaveNode != arriveNode)
+							{
+								if(leaveNode == 0)
+								{
+									//不应该有10
+									leaveGvalue =bestPath.get(leaveNode).gvalue;
+								}
+								else
+								{
+									leaveGvalue = bestPath.get(leaveNode-1).gvalue;
+								}
+								arriveGvalue = bestPath.get(arriveNode).gvalue;
+							}
+							else
+							{
+								if(leaveNode ==0)
+								{
+									leaveGvalue = bestPath.get(leaveNode).gvalue;
+								}
+								else
+								{
+									leaveGvalue = bestPath.get(leaveNode-1).gvalue;
+								}
+								arriveGvalue = bestPath.get(arriveNode).gvalue;
+							}
+							Integer keyAttack = new Integer(sE);
+							List<Enemy> attackEnemy = startEnemy.get(keyAttack);
+							List<Target> targetList = new ArrayList<Target>();
+							if(attackEnemy == null)
+							{
+								System.out.println("attackEnemyList error");
+							}
+							else
+							{
+								for(int attackE=0;attackE<attackEnemy.size();attackE++)
+								{
+									Enemy toAttackE = attackEnemy.get(attackE);
+									float arriveTime =  (toAttackE.getTimeToCome()+arriveGvalue/toAttackE.getSpeed());
+									float leaveTime =  (toAttackE.getTimeToCome()+leaveGvalue/toAttackE.getSpeed());
+									int ID = toAttackE.getEnemyID();
+									int life = toAttackE.getLife();
+									int timeToCome = toAttackE.getTimeToCome();
+				
+									Target newTarget = new Target(ID,life,timeToCome,arriveTime,leaveTime);
+								//	newTarget.setSE(sE);
+									targetList.add(newTarget);
+								}
+								cannonTower.addTargetList(targetList);
+							}
+						}
+					}
+				}
+				if(start == true)
+				{
+					
+					start = false;
+					if(leaveNode != arriveNode)
+					{
+						if(leaveNode == 0)
+						{
+							//不应该有10
+							leaveGvalue =bestPath.get(leaveNode).gvalue;
+						}
+						else
+						{
+							leaveGvalue = bestPath.get(leaveNode-1).gvalue;
+						}
+						arriveGvalue = bestPath.get(arriveNode).gvalue;
+					}
+					else
+					{
+						if(leaveNode ==0)
+						{
+							leaveGvalue = bestPath.get(leaveNode).gvalue;
+						}
+						else
+						{
+							leaveGvalue = bestPath.get(leaveNode-1).gvalue;
+						}
+						arriveGvalue = bestPath.get(arriveNode).gvalue;
+					}
+					Integer keyAttack = new Integer(sE);
+					List<Enemy> attackEnemy = startEnemy.get(keyAttack);
+					List<Target> targetList = new ArrayList<Target>();
+					if(attackEnemy == null)
+					{
+						System.out.println("attackEnemyList error");
+					}
+					else
+					{
+						for(int attackE=0;attackE<attackEnemy.size();attackE++)
+						{
+							Enemy toAttackE = attackEnemy.get(attackE);
+							float arriveTime =  (toAttackE.getTimeToCome()+arriveGvalue/toAttackE.getSpeed());
+							float leaveTime =  (toAttackE.getTimeToCome()+leaveGvalue/toAttackE.getSpeed());
+							int ID = toAttackE.getEnemyID();
+							int life = toAttackE.getLife();
+							int timeToCome = toAttackE.getTimeToCome();
+		
+							Target newTarget = new Target(ID,life,timeToCome,arriveTime,leaveTime);
+						//	newTarget.setSE(sE);
+							targetList.add(newTarget);
+						}
+						cannonTower.addTargetList(targetList);
+					}
+				
+				}
+			}
+			if(cannonTower.isAttack == true)
+			{
+				List<Target> attacked = cannonTower.Attack();
+				for(int attackIndex=0;attackIndex<attacked.size();attackIndex++)
+				{
+					Integer ID = new Integer(attacked.get(attackIndex).getID());
+					Integer hurtLife = idToHurt.get(ID);
+					if(hurtLife==null)
+					{
+						hurtLife = new Integer(attacked.get(attackIndex).getHurtLife());
+						idToHurt.put(ID,hurtLife);
+					}
+					else
+					{
+						int hurt = hurtLife.intValue();
+						hurt = hurt+attacked.get(attackIndex).getHurtLife();
+						hurtLife = new Integer(hurt);
+						idToHurt.put(ID,hurtLife);
+					}
+				}
+			}
+			
+		}
+		for(int hurtEnemy=0;hurtEnemy<enemyList.size();hurtEnemy++)
+		{
+			Enemy h_enemy = enemyList.get(hurtEnemy);
+			Integer h_enemyID = new Integer(h_enemy.getEnemyID());
+			Integer hurt_enemy = idToHurt.get(h_enemyID);
+			if(hurt_enemy != null)
+			{
+				if(hurt_enemy.intValue()>=h_enemy.getLife())
+				{
+					killEnemy+=1;
+				}
+			}
+		}

@@ -1,0 +1,21 @@
+---- map Matches (20 in 6 files) ----
+AbstractSystemInputParser.java:     * @param rows game map height
+AbstractSystemInputParser.java:     * @param cols game map width
+AbstractSystemInputReader.java:		int map,level;
+AbstractSystemInputReader.java:		map = Integer.parseInt(buf);
+AbstractSystemInputReader.java:		for(int i=0;i<map;i++){
+Ilk.java: * Represents type of tile on the game map.
+Order.java:     * @param tile map tile with my ant
+Tile.java: * Represents a tile of the game map.
+Towers.java:	/** Maximum map size. */
+Towers.java:				{	int ilk = map[x][y].getIlk().ordinal();
+Towers.java:     * Returns game map height.
+Towers.java:     * @return game map height
+Towers.java:     * Returns game map width.
+Towers.java:     * @return game map width
+Towers.java:     * @param tile location on the game map
+Towers.java:     * @param tile location on the game map
+Towers.java:     * @param myAnt map tile with my ant
+Towers.java:		    			if (valid && (best == null || betterThan(map[adj.getRow()][adj.getCol()], best))) {
+Towers.java:		    				best = map[adj.getRow()][adj.getCol()];
+Towers.java:		    			if ((pushed[ant.getRow()][ant.getCol()] != null && best.getScore() >= 0) || best.getScore() >  map[ant.getRow()][ant.getCol()].getScore()) {
